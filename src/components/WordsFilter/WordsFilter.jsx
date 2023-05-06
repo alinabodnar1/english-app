@@ -1,16 +1,17 @@
 import React from 'react';
 import TextField from '@mui/material/TextField';
+import { Container } from './WordFilter.styled';
 
 export default function WordsFilter({ value, onChange }) {
   return (
-    <div>
+    <Container>
       <TextField
         id="standard-basic"
-        label="Standard"
+        label="Filter"
         variant="standard"
         value={value}
         onChange={onChange}
       />
-    </div>
+    </Container>
   );
 }

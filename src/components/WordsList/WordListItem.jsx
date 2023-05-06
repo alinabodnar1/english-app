@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Checkbox from '@mui/material/Checkbox';
 import TextField from '@mui/material/TextField';
+import { StyledLi } from './WordList.styled';
 
 export default class WordListItem extends Component {
   state = {
@@ -30,7 +31,7 @@ export default class WordListItem extends Component {
     const { index, word, onDelete } = this.props;
     const { isEdit } = this.state;
     return (
-      <li key={word.id}>
+      <StyledLi key={word.id}>
         <Checkbox /> <span>{index + 1}</span>{' '}
         {isEdit ? (
           <TextField
@@ -56,13 +57,17 @@ export default class WordListItem extends Component {
         ) : (
           <span>{word.uaWord}</span>
         )}{' '}
-        <button onClick={() => onDelete(word.id)} type="button">
+        <button
+          className="delete"
+          onClick={() => onDelete(word.id)}
+          type="button"
+        >
           Delete
         </button>{' '}
-        <button onClick={this.handleEdit} type="button">
+        <button className="edit" onClick={this.handleEdit} type="button">
           {isEdit ? 'Save' : 'Edit'}
         </button>
-      </li>
+      </StyledLi>
     );
   }
 }

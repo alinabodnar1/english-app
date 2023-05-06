@@ -1,6 +1,7 @@
-import WordsFilter from './WordsFilter/WordsFilter';
-import WordsForm from './WordsForm/WordsForm';
-import WordsList from './WordsList/WordsList';
+import { Container } from './App.styled';
+import WordsFilter from 'components/WordsFilter/WordsFilter';
+import WordsForm from 'components/WordsForm/WordsForm';
+import WordsList from 'components/WordsList/WordsList';
 import React, { Component } from 'react';
 
 export default class App extends Component {
@@ -49,7 +50,7 @@ export default class App extends Component {
   render() {
     const filteredWords = this.filterWords();
     return (
-      <div>
+      <Container>
         <WordsForm addWord={this.addWord} />
         <WordsFilter value={this.state.filter} onChange={this.handleChange} />
         <WordsList
@@ -57,7 +58,7 @@ export default class App extends Component {
           onDelete={this.removeWord}
           onEdit={this.editWord}
         />
-      </div>
+      </Container>
     );
   }
 }
