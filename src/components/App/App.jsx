@@ -1,34 +1,35 @@
-import { Container } from './App.styled';
-import WordsFilter from 'components/WordsFilter/WordsFilter';
-import WordsForm from 'components/WordsForm/WordsForm';
-import WordsList from 'components/WordsList/WordsList';
-import React, { Component } from 'react';
+import Layout from 'components/Layout/Layout';
+import { useLocalStorage } from 'hooks/useLocalStorage';
+import Home from 'pages/Home';
+import Quiz from 'pages/Quiz';
+import React, { useState, createContext } from 'react';
+import { Route, Routes } from 'react-router-dom';
 
-export default class App extends Component {
-  state = {
-    words: [],
-    filter: '',
-  };
+export const WordsContext = createContext();
 
-  addWord = word => {
-    this.setState(prevState => {
-      return {
-        words: [...prevState.words, word],
-      };
-    });
+const App = () => {
+  const [words, setWords] = useLocalStorage('words', []);
+  const [filter, setFilter] = useState('');
+  const addWord = word => {
+    setWords(prev => [...prev, word]);
   };
-  handleChange = e => {
-    this.setState({
-      filter: e.target.value,
-    });
+  const handleChange = e => {
+    setFilter(e.target.value);
   };
-  removeWord = id => {
-    this.setState(prevState => ({
-      words: prevState.words.filter(el => el.id !== id),
-    }));
+  const removeWord = id => {
+    setWords(prev => prev.filter(el => el.id !== id));
   };
-  filterWords = () => {
-    const { words, filter } = this.state;
+  const handleCheck = id => {
+    setWords(prev =>
+      prev.map(el => {
+        if (el.id === id) {
+          return { ...el, isChecked: !el.isChecked };
+        }
+        return el;
+      })
+    );
+  };
+  const filterWords = () => {
     return words.filter(word => {
       return (
         word.uaWord.toLowerCase().includes(filter.toLowerCase().trim()) ||
@@ -36,29 +37,37 @@ export default class App extends Component {
       );
     });
   };
-  editWord = word => {
-    this.setState(prevState => ({
-      words: prevState.words.map(el => {
+  const editWord = word => {
+    setWords(prev =>
+      prev.map(el => {
         if (el.id === word.id) {
           return word;
         }
         return el;
-      }),
-    }));
-  };
-  /* -------------------------------------------------------------------------- */
-  render() {
-    const filteredWords = this.filterWords();
-    return (
-      <Container>
-        <WordsForm addWord={this.addWord} />
-        <WordsFilter value={this.state.filter} onChange={this.handleChange} />
-        <WordsList
-          words={filteredWords}
-          onDelete={this.removeWord}
-          onEdit={this.editWord}
-        />
-      </Container>
+      })
     );
-  }
-}
+  };
+  return (
+    <WordsContext.Provider
+      value={{
+        editWord,
+        removeWord,
+        filteredWords: filterWords(),
+        handleChange,
+        addWord,
+        words,
+        filter,
+        handleCheck,
+      }}
+    >
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Home />} />{' '}
+          <Route path="quiz" element={<Quiz />} />
+        </Route>
+      </Routes>
+    </WordsContext.Provider>
+  );
+};
+
+export default App;

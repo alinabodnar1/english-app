@@ -1,8 +1,9 @@
-import React from 'react';
 import TextField from '@mui/material/TextField';
 import { Container } from './WordFilter.styled';
+import { useWordsContext } from 'hooks/useWordsContext';
 
-export default function WordsFilter({ value, onChange }) {
+export default function WordsFilter() {
+  const { filter: value, handleChange } = useWordsContext();
   return (
     <Container>
       <TextField
@@ -10,7 +11,7 @@ export default function WordsFilter({ value, onChange }) {
         label="Filter"
         variant="standard"
         value={value}
-        onChange={onChange}
+        onChange={handleChange}
       />
     </Container>
   );

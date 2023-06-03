@@ -1,16 +1,20 @@
 import React from 'react';
 import WordListItem from './WordListItem';
+import { useWordsContext } from 'hooks/useWordsContext';
 
-export default function WordsList({ words, onDelete, onEdit }) {
+export default function WordsList() {
+  const { editWord, removeWord, filteredWords, handleCheck } =
+    useWordsContext();
   return (
     <ul>
-      {words.map((word, index) => (
+      {filteredWords.map((word, index) => (
         <WordListItem
           key={word.id}
           word={word}
           index={index}
-          onDelete={onDelete}
-          onEdit={onEdit}
+          onCheck={handleCheck}
+          onDelete={removeWord}
+          onEdit={editWord}
         />
       ))}
     </ul>
