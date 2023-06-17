@@ -1,21 +1,14 @@
 import React from 'react';
 import WordListItem from './WordListItem';
-import { useWordsContext } from 'hooks/useWordsContext';
+import { useSelector } from 'react-redux';
+import { selectFilteredWords } from 'store/selectors';
 
 export default function WordsList() {
-  const { editWord, removeWord, filteredWords, handleCheck } =
-    useWordsContext();
+  const words = useSelector(selectFilteredWords);
   return (
     <ul>
-      {filteredWords.map((word, index) => (
-        <WordListItem
-          key={word.id}
-          word={word}
-          index={index}
-          onCheck={handleCheck}
-          onDelete={removeWord}
-          onEdit={editWord}
-        />
+      {words.map((word, index) => (
+        <WordListItem key={word.id} word={word} index={index} />
       ))}
     </ul>
   );

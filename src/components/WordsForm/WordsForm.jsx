@@ -3,7 +3,8 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { nanoid } from 'nanoid';
 import { StyledForm } from './WordsForm.styled';
-import { useWordsContext } from 'hooks/useWordsContext';
+import { useDispatch } from 'react-redux';
+import { addWord } from 'store/operations';
 
 const initialState = {
   uaWord: '',
@@ -22,8 +23,8 @@ function reducer(state, { type, payload }) {
   }
 }
 const WordsForm = () => {
-  const { addWord } = useWordsContext();
   const [state, dispatch] = useReducer(reducer, initialState);
+  const dispatchToRedux = useDispatch();
   /* -------------------------------------------------------------------------- */
   const handleChange = e => {
     dispatch({
@@ -43,7 +44,7 @@ const WordsForm = () => {
       isChecked: false,
       ...state,
     };
-    addWord(word);
+    dispatchToRedux(addWord(word));
     dispatch({
       type: 'reset',
     });

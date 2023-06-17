@@ -2,6 +2,8 @@ import React, { useReducer } from 'react';
 import Checkbox from '@mui/material/Checkbox';
 import TextField from '@mui/material/TextField';
 import { StyledLi } from './WordList.styled';
+import { useDispatch } from 'react-redux';
+import { deleteWord, editWord } from 'store/operations';
 
 function reducer(state, { type, payload }) {
   switch (type) {
@@ -15,7 +17,8 @@ function reducer(state, { type, payload }) {
       return state;
   }
 }
-const WordListItem = ({ word, onEdit, onDelete, index, onCheck }) => {
+const WordListItem = ({ word, index, onCheck }) => {
+  const dispatchToRedux = useDispatch();
   const [state, dispatch] = useReducer(reducer, {
     isEdit: false,
     uaWord: word.uaWord,
@@ -28,7 +31,7 @@ const WordListItem = ({ word, onEdit, onDelete, index, onCheck }) => {
         enWord: state.enWord,
         uaWord: state.uaWord,
       };
-      onEdit(updatedWord);
+      dispatchToRedux(editWord(updatedWord));
     }
     dispatch({
       type: 'changeMode',
@@ -43,7 +46,12 @@ const WordListItem = ({ word, onEdit, onDelete, index, onCheck }) => {
 
   return (
     <StyledLi key={word.id}>
-      <Checkbox onClick={() => onCheck(word.id)} checked={word.isChecked} />{' '}
+      <Checkbox
+        onClick={() =>
+          dispatchToRedux(editWord({ id: word.id, isChecked: !word.isChecked }))
+        }
+        checked={word.isChecked}
+      />{' '}
       <span>{index + 1}</span>{' '}
       {state.isEdit ? (
         <TextField
@@ -71,7 +79,7 @@ const WordListItem = ({ word, onEdit, onDelete, index, onCheck }) => {
       )}{' '}
       <button
         className="delete"
-        onClick={() => onDelete(word.id)}
+        onClick={() => dispatchToRedux(deleteWord(word.id))}
         type="button"
       >
         Delete
