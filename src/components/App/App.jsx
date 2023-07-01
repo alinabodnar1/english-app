@@ -11,7 +11,7 @@ const App = () => {
 
   useEffect(() => {
     dispatch(fetchWords());
-  }, []);
+  }, [dispatch]);
 
   return (
     <Routes>
