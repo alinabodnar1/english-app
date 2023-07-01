@@ -26,7 +26,7 @@ const wordsSlice = createSlice({
       .addCase(deleteWord.pending, handlePending)
       .addCase(deleteWord.fulfilled, (state, { payload }) => {
         const index = state.items.findIndex(word => {
-          return word.id === payload;
+          return word.id === payload.id;
         });
         state.items.splice(index, 1);
         state.error = null;

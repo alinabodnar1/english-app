@@ -10,6 +10,7 @@ import {
   UaWord,
   Title,
 } from './Quiz.styled';
+import QuizComponent from 'components/QuizComponent';
 
 const Quiz = () => {
   const checkedWords = useSelector(selectCheckedWords);
@@ -17,6 +18,8 @@ const Quiz = () => {
   const [quizWords, setQuizWords] = useState([]);
   const [randomWord, setRandomWord] = useState(null);
   const [correctAnswers, setCorrectAnswers] = useState(0);
+  const [startQuiz, setStartQuiz] = useState(false);
+  const [startSecondQuiz, setStartSecondQuiz] = useState(false);
 
   useEffect(() => {
     setRandomWord(
@@ -52,7 +55,14 @@ const Quiz = () => {
   const variants = getVariants();
 
   const handleStartQuiz = () => {
-    setQuizWords(checkedWords);
+    
+    if (!startQuiz) {
+      setQuizWords(checkedWords);
+    }
+    if (startSecondQuiz) {
+      setStartSecondQuiz(false);
+    }
+    setStartQuiz(prev => !prev);
   };
 
   function handleChooseVariant(id) {
@@ -64,37 +74,48 @@ const Quiz = () => {
       setQuizWords(undatedQuizWords);
     }
   }
+
+  function secondStartQuiz() {
+    if (startQuiz) {
+      setStartQuiz(false);
+    }
+    setStartSecondQuiz(prev => !prev);
+  }
+
   return (
     <Container>
       <Title>Quiz</Title>
-
-      <ButtonContainer>
+      <div style={{display: 'flex', justifyContent: 'space-between'}}>
+         <ButtonContainer>
         <Button variant="contained" onClick={handleStartQuiz}>
           Start Quiz
-        </Button>
-      </ButtonContainer>
-
-      {randomWord && (
+          </Button>
+          
+        </ButtonContainer>
+         <Button variant='contained' onClick={secondStartQuiz}>Start Quiz2</Button>
+</div>
+     
+      {startQuiz && (
         <div>
           <p>
             Correct answers:
             {correctAnswers}/{checkedWords.length}
           </p>
-          <UaWord>{randomWord.uaWord}</UaWord>
-          {!variants.includes(null) &&
+          <UaWord>{randomWord?.uaWord}</UaWord>
+          {!variants.includes(null) && !variants.includes(undefined)? 
             variants.map(variant => (
-              <ButtonVariant>
+              <ButtonVariant key={variant.id}>
                 <Button
                   variant="contained"
-                  key={variant.id}
                   onClick={() => handleChooseVariant(variant.id)}
                 >
                   {variant.enWord}
                 </Button>
               </ButtonVariant>
-            ))}
+            )): <p>Hello world</p>}
         </div>
       )}
+     {startSecondQuiz && <QuizComponent />}
     </Container>
   );
 };

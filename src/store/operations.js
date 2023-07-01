@@ -19,7 +19,7 @@ export const deleteWord = createAsyncThunk(
   async (wordId, { rejectWithValue }) => {
     try {
       const { data } = await axios.delete(`/words/${wordId}`);
-      return data.id;
+      return data;
     } catch (error) {
       return rejectWithValue(error.message);
     }
